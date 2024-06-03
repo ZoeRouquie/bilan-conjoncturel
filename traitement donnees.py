@@ -1,20 +1,21 @@
 import pandas as pd
-from decimal import Decimal
-from datetime import datetime
+file_path = './data/quotas prix Europe.csv'
 
-data = pd.read_csv("../Downloads/Prix pétrole.csv")
-pd.set_option('display.max_rows', None)  
+data = pd.read_csv(file_path)
 
+data['Date'] = pd.to_datetime(data['Date'], format='%d.%m.%Y')
+data['Year'] = data['Date'].dt.year
 
-for idx, d in enumerate(data['Month']):
-    if not d.startswith("nov.") and not d.startswith("oct."):
-        data.at[idx, 'Month'] = datetime.strptime(d, "%b %Y")
-        
-        
-for i in data['Europe Brent Spot Price FOB Dollars per Barrel']:
-    i = "{:.2f}".format(i)
+numeric_columns = ['Domestic Currency (EUR)', 'Exchange Rate (USD)', 'EUR_USD', 'EUR_EUR']
 
-print(data)
-data.to_csv('Prix pétrole2.csv',  index=False)
+for col in numeric_columns:
+    data[col] = data[col].str.replace(',', '.')
 
-print('test')
+data.drop(columns=['Date as Text'])
+
+print(data['Year'])
+
+grouped_data = data.groupby('Year')[numeric_columns].mean().reset_index()
+
+print(grouped_data)
+# grouped_data.to_csv('prix quota EUrope annuel.csv', index=False)
