@@ -10,12 +10,10 @@ numeric_columns = ['Domestic Currency (EUR)', 'Exchange Rate (USD)', 'EUR_USD', 
 
 for col in numeric_columns:
     data[col] = data[col].str.replace(',', '.')
-
-data.drop(columns=['Date as Text'])
-
-print(data['Year'])
+    data[col] = data[col].astype(float)
+data = data.drop(columns=['Date as Text'])
 
 grouped_data = data.groupby('Year')[numeric_columns].mean().reset_index()
 
-print(grouped_data)
-# grouped_data.to_csv('prix quota EUrope annuel.csv', index=False)
+
+grouped_data.to_csv('prix quota EUrope annuel.csv', index=False)
