@@ -1,12 +1,16 @@
 import pandas as pd
-file_path = 'data\prix quota Europe annuel.csv'
 
-data = pd.read_csv(file_path)
+file_path = 'data\EU génération éléectricité.csv'
 
-data = data.drop('Exchange Rate (USD)')
+data = pd.read_csv(file_path, sep = ';')
 
-data = data.drop('EUR_USD')
 
-data = data.drop('EUR_EUR')
+data['Year'] = pd.to_datetime(data['date']).dt.year
 
-data.to_csv(file_path)
+# Utiliser pivot_table pour restructurer les données
+df_pivot = data.pivot_table(index='Year', columns='variable', values='generation_twh', aggfunc='sum').reset_index()
+
+# Afficher le DataFrame résultant
+
+df_pivot.to_csv(file_path,index= False)
+print('done')
