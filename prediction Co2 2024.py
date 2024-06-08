@@ -7,13 +7,19 @@ from sklearn.metrics import mean_squared_error
 data = pd.read_csv('data\data final.csv')
 
 
-features = ['Europe Brent Spot Price FOB Dollars per Barrel', 'prix quotas', 'prix electricité par kwt', 'production energie']
+features = ['Europe Brent Spot Price FOB Dollars per Barrel', 'prix quotas', 'prix electricité par kwt']
 target = 'emission de CO2'
-data = data.dropna(inplace=True)
 
-print(data)
-"""X = data[features]
+X = data[features]
+X = X.dropna(inplace=True)
 y = data[target]
+y.dropna(inplace=True)
+
+
+print(X)
+
+
+"""
 
 # Diviser les données en ensembles d'entraînement et de test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
