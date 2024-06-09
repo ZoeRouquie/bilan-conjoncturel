@@ -1,6 +1,6 @@
 import pandas as pd
 
-file_path = 'data\EU génération éléectricité.csv'
+file_path = 'data\bilan conjoncturel EU ETS datas - data.csv'
 
 data = pd.read_csv(file_path, sep = ';')
 
@@ -12,5 +12,5 @@ df_pivot = data.pivot_table(index='Year', columns='variable', values='generation
 
 # Afficher le DataFrame résultant
 
-df_pivot.to_csv(file_path,index= False)
+df_pivot.to_csv('data\data final.csv',index= False)
 print('done')

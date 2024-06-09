@@ -1,51 +1,33 @@
 import pandas as pd
-import csv
-from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
 
-data = pd.read_csv('data\data final.csv')
+pd.set_option('display.max_rows', None)  
+pd.set_option('display.max_columns', None)  
+df = pd.read_csv('data/bilan conjoncturel EU ETS datas - data.csv')
 
+data = df.dropna()
+X = data.drop(columns=['Year', 'emission de CO2'])
+y = data['emission de CO2']
 
-features = ['Europe Brent Spot Price FOB Dollars per Barrel', 'prix quotas', 'prix electricité par kwt']
-target = 'emission de CO2'
-
-X = data[features]
-X = X.dropna(inplace=True)
-y = data[target]
-y.dropna(inplace=True)
-
-
-print(X)
-
-
-"""
-
-# Diviser les données en ensembles d'entraînement et de test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Créer et entraîner le modèle de régression linéaire multivariée
+# Créer et ajuster le modèle de régression linéaire multiple
 model = LinearRegression()
-model.fit(X_train, y_train)
+model.fit(X, y)
 
-# Évaluer le modèle
-y_pred = model.predict(X_test)
-mse = mean_squared_error(y_test, y_pred)
-print('Mean Squared Error:', mse)
+# Préparer les données pour l'année 2024
+X_2024 = df.tail(1)
+X_2024 = X_2024.drop(columns = ['Year','emission de CO2'])
 
-# Prédire les émissions de CO2 pour l'année 2024
-# Créez un DataFrame avec les caractéristiques pour 2024
-X_2024 = pd.DataFrame({'Europe Brent Spot Price FOB Dollars per Barrel': [None],
-                       'prix quotas': [None],
-                       'prix electricité par kwt': [None],
-                       'Year': [2024]})
 
-# Faites une prédiction
 prediction_2024 = model.predict(X_2024)
-print('Prédiction pour 2024:', prediction_2024)
+print(prediction_2024)
 
+df.loc[df['Year'] == 2024, 'emission de CO2'] = prediction_2024[0]
 
-
-
-
-"""
+# Afficher la courbe d'émission de CO2
+plt.plot(df['Year'], df['emission de CO2'], marker='o')
+plt.xlabel('Year')
+plt.ylabel('emission de CO2')
+plt.title('Prediction of CO2 Emissions for 2024')
+plt.grid(True)
+plt.show()
