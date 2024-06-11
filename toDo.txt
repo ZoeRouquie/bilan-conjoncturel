@@ -1,0 +1,2 @@
+-Trouver la consommation energétique de l'Europe en 2022 et 2023 : check 
+-Faire la régression linéaire
