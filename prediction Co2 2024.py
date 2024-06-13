@@ -1,44 +1,32 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-
 import csv
 
-def multiplier_par_4(row):
-    return [float(x) * 4 if x else "" for x in row]
+def data_to_trimestre(value):
+    try:
+        return float(value) * 0.6 if value else ""
+    except ValueError:
+        return value
 
+cols = ['emission de CO2', 'Bioenergy', 'Clean', 'Coal', 'Fossil', 'Gas', 'Hydro', 'Nuclear', 'Other Fossil', 'Other Renewables', 'Solar', 'Wind', 'Wind and solar']
 
 with open('data/final data.csv', mode='r', newline='') as csvfile:
     reader = csv.reader(csvfile)
     header = next(reader) 
 
 
-    new_rows = [header]
+    indices_to_modify = [header.index(col) for col in cols if col in header]
 
+    new_rows = [header]
 
     for row in reader:
         if row[0] == '2024':
-            new_row = [row[0]] + multiplier_par_4(row[1:])
+            new_row = row.copy()
+            for idx in indices_to_modify:
+                new_row[idx] = data_to_trimestre(new_row[idx])
         else:
             new_row = row
         new_rows.append(new_row)
 
-
 with open('final data x4.csv', mode='w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(new_rows)
-
-
-# colors = [
-#     "#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f",
-#     "#bcbd22","#17becf","#1e90ff","#ff1493","#32cd32","#ff4500","#9932cc","#ffd700"
-# ]
-
-# for index, c in enumerate(data.drop(columns='Year').columns):
-#     plt.figure()  # Crée un nouveau graphique
-#     plt.plot(data['Year'], data[c], marker='o', label=c, color=colors[index])
-#     plt.title(c)  # Définit le titre du graphique comme le nom de la variable
-#     plt.xlabel('Année')
-#     plt.ylabel('Valeur')
-#     plt.legend()
-#     plt.show()
 
